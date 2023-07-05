@@ -10,23 +10,10 @@ type User = {
     email: string;
 };
 
-const getUsers = cache(() =>
-    fetch("https://jsonplaceholder.typicode.com/users").then((res) => res.json())
-);
-
-export default function Profile(){
-    const{ status } = useSession({
-        required: true,
-        onUnauthenticated() {
-            redirect("/api/auth/signin");
-        },
-    });
-
-    if(status === "loading"){
-        return <p>Loading....</p>
-    }
-
-    let users = use<User[]>(getUsers());
+export default async function Profile(){
+    const users: User[] = await fetch(
+        "https://jsonplaceholder.typicode.com/users"
+    ).then((res) => res.json());
 
     return (
         <main style={{ maxWidth: 1200, marginInline: "auto", padding: 20}}>
@@ -52,5 +39,5 @@ export default function Profile(){
                 ))}
             </div>
         </main>
-    )
+    );
 }
